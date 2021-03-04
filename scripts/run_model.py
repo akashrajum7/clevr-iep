@@ -124,7 +124,7 @@ def run_single_example(args, model):
 
   # Load and preprocess the image
   img_size = (args.image_height, args.image_width)
-  img = imread(args.image, mode='RGB')
+  img = imread(args.image, pilmode='RGB')
   # img = imresize(img, img_size, interp='bicubic')
   im = Image.fromarray(img)
   img = np.array(im.resize(img_size, PIL.Image.BICUBIC))
