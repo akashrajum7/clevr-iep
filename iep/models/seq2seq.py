@@ -171,10 +171,10 @@ class Seq2Seq(nn.Module):
       logprobs = logprobs / temperature
       probs = F.softmax(logprobs.view(N, -1),dim=None) # Now N x V
       if argmax:
-      _, cur_output = probs.max(1)
-      cur_output = cur_output.unsqueeze(0)
+        _, cur_output = probs.max(1)
+        cur_output = cur_output.unsqueeze(0)
       else:
-      cur_output = probs.multinomial() # Now N x 1
+        cur_output = probs.multinomial() # Now N x 1
       self.multinomial_outputs.append(cur_output)
       self.multinomial_probs.append(probs)
       cur_output_data = cur_output.data.cpu()
@@ -185,7 +185,7 @@ class Seq2Seq(nn.Module):
       done = logical_or(done, cur_output_data.cpu() == self.END)
       cur_input = cur_output
       if done.sum() == N:
-      break
+        break
     return Variable(y.type_as(x.data))
 
   def reinforce_backward(self, reward, output_mask=None):
