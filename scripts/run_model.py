@@ -19,6 +19,7 @@ import torchvision
 import numpy as np
 import h5py
 from imageio import imread
+import PIL
 from PIL import Image
 
 import iep.utils as utils
