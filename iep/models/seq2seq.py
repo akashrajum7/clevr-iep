@@ -11,6 +11,7 @@ import torch.cuda
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
+import numpy as np 
 
 from iep.embedding import expand_embedding_vocab
 
