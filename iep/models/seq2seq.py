@@ -169,20 +169,23 @@ class Seq2Seq(nn.Module):
       # logprobs is N x 1 x V
       logprobs, h, c = self.decoder(encoded, cur_input, h0=h, c0=c)
       logprobs = logprobs / temperature
-      probs = F.softmax(logprobs.view(N, -1)) # Now N x V
+      probs = F.softmax(logprobs.view(N, -1),dim=None) # Now N x V
       if argmax:
-        _, cur_output = probs.max(1)
+      _, cur_output = probs.max(1)
+      cur_output = cur_output.unsqueeze(0)
       else:
-        cur_output = probs.multinomial() # Now N x 1
+      cur_output = probs.multinomial() # Now N x 1
       self.multinomial_outputs.append(cur_output)
       self.multinomial_probs.append(probs)
       cur_output_data = cur_output.data.cpu()
-      not_done = logical_not(done)
-      y[:, t][not_done] = cur_output_data[not_done]
+      #not_done = logical_not(done)
+      not_done= np.where(done.data.cpu().numpy() == 0)
+      #y[:, t][not_done] = cur_output_data[not_done]
+      y[not_done, t] = cur_output_data[not_done]
       done = logical_or(done, cur_output_data.cpu() == self.END)
       cur_input = cur_output
       if done.sum() == N:
-        break
+      break
     return Variable(y.type_as(x.data))
 
   def reinforce_backward(self, reward, output_mask=None):
